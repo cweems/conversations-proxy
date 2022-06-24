@@ -1,11 +1,13 @@
 # Twilio Conversations Proxy
 
-Twilio Proxy's end-of-sale was announced in early 2022. Twilio Conversations has been positioned as the alternative, but currently leaves gaps for customers:
+Twilio Proxy is no longer available to new customers. Twilio Conversations can be used as an alternative, but misses a few of Proxy's core features:
 
 * No number selection management for conversation sessions.
 * No support for voice.
 
 This repository provides a proof of concept for supporting those two features. Using `functions/add-participant.js` you can add a participant to a conversation and auto-select their proxy address based on available phone numbers.
+
+<img width="723" alt="Screen Shot 2022-06-24 at 10 51 32 AM" src="https://user-images.githubusercontent.com/1418949/175615606-a23f5061-cc76-4c41-a8e3-64d7a0ff6253.png">
 
 If a user calls their proxy address (phone number) for the conversation, `functions/incoming-call.js` can place an outbound call to all participants in the conversation and join them into a conference.
 
