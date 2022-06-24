@@ -28,11 +28,10 @@ exports.handler = async function(context, event, callback) {
             return p.participantMessagingBinding.proxy_address;
           })
 
-          console.log(proxyAddresses);
           return proxyAddresses;
         });
     
-    console.log(`${address} is currently bound to these proxy addresses: \n\n ${inUseAddresses.join("\n")}`)
+    console.log(`${address} is currently bound to these proxy addresses:\n\n${inUseAddresses.join("\n")}`)
     
     // Query Twilio numbers and find one that is
     // not being used as a proxy_address
@@ -49,16 +48,21 @@ exports.handler = async function(context, event, callback) {
         }
 
         if (!phoneNumber) {
-          console.log('No available phone numbers found, you can add one in the Twilio Console.')
           /*
             Your code to handle fetching new numbers here.
           */
+
+          return null;
         }
 
         return phoneNumber;
       });
     
-    console.log(`Found an available number to use as a the proxy address: ${newProxyAddress}`)
+    if (newProxyAddress) {
+      console.log(`Found an available number to use as a the proxy address: ${newProxyAddress}`)
+    } else {
+      throw new Error('No available phone numbers found, you can add one in the Twilio Console.')
+    }
 
     // Add the conversation participant with the new Proxy Address
     const participant = await client.conversations.conversations(event.conversationSid)
@@ -74,6 +78,7 @@ exports.handler = async function(context, event, callback) {
     callback(null, participant)
 
   } catch (err) {
+    console.error(err);
     callback(err);
-  }  
+  }
 };

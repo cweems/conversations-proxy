@@ -1,0 +1,67 @@
+<!doctype html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0-beta1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-0evHe/X+R7YkIZDRvuzKMRqM+OrBnVFBL6DOitfPri4tjfHxaWutUpFmBp4vmVor" crossorigin="anonymous">
+</head>
+<body>
+  <div class="container">
+    <div class="mt-5 col-md-4 offset-md-4">
+      <img src="/conversations-icon.png" class="rounded mx-auto d-block" height="100px" width="auto" alt="Twilio Conversations icon">
+      <p class="text-center mt-3">Twilio Conversations Proxy will auto-select an available phone number to use as the participant's proxy address.</p>
+    </div>
+    <div class="card mt-5 col-md-6 offset-md-3">
+      <div class="card-body">
+        <form id="add-participant-form">
+          <div class="mb-3">
+            <label for="address" class="form-label">Participant Address (Phone Number)</label>
+            <input type="phone" class="form-control" id="address" name="address" aria-describedby="address" placeholder="+14151234567">
+            <div id="addressHelp" class="form-text">Input your phone number in e164 format.</div>
+          </div>
+          <div class="mb-3">
+            <label for="conversationSid" class="form-label">Conversation SID</label>
+            <input type="text" class="form-control" id="conversationSid" name="conversationSid" aria-describedby="conversationSid" placeholder="CHXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX">
+            <div id="conversationSidHelp" class="form-text">Input the conversation SID you would like to add the participant to.</div>
+          </div>
+          <div class="d-grid gap-2">
+            <button type="submit" class="btn btn-primary">Add Participant</button>
+          </div>
+        </form>
+      </div>
+    </div>
+    <iframe id="output-message" class="col-md-6 offset-md-3 mt-5">
+    </iframe>
+  </div>
+</body>
+<script>
+  const form = document.querySelector('#add-participant-form');
+  const output = document.getElementById('output-message').contentWindow.document;
+
+  form.addEventListener('submit', (event) => {
+    event.preventDefault();
+
+    let data = new URLSearchParams();
+    for (const keyValue of new FormData(form)) {
+      data.append(keyValue[0], keyValue[1])
+    }
+
+    fetch('/add-participant', {
+      method: 'POST',
+      headers:{
+        'Content-Type': 'application/x-www-form-urlencoded'
+      },    
+      body: data
+    })
+    .then((response) => {
+      return response.text();
+    })
+    .then((data) => {
+      output.write(data)
+    })
+    .catch((err) => {
+      console.error(err);
+    });
+  });
+</script>
+</html>

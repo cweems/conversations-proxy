@@ -42,8 +42,10 @@ Then under `Configure With` select `Webhook`. Paste your callback URL into the `
 
 ## Usage
 
-You can use `curl` to make requests to `/add-participant` like this:
+You can test the functionality by opening up `https://[YOUR_RUNTIME_URL]/index.html` and using the UI. You can also call `/add-participant` directly by using `curl` like this:
 
 ```bash
-curl https://[YOUR_DOMAIN]/add-participant\?address\=%2B[PHONE_NUMBER]\&conversationSid\=CHXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+curl -X POST https://[YOUR_RUNTIME_URL]/add-participant \                                                                                                      ─╯
+--data-urlencode address=[E164_PHONE_NUMBER] \
+--data-urlencode conversationSid=CHXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
 ```
