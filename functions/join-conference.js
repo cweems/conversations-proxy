@@ -1,3 +1,8 @@
+/*
+    This function adds callers into a conference.
+    It is referenced in incoming-call.js.
+*/
+
 exports.handler = async function(context, event, callback) {
 
     const twiml = new Twilio.twiml.VoiceResponse()

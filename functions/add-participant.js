@@ -15,7 +15,7 @@ exports.handler = async function(context, event, callback) {
     const client = context.getTwilioClient();
     let address = decodeURI(event.address);
 
-    console.log(address);
+    console.log(`Received a new request to add ${address} to ${event.conversationSid}`);
 
     // Get an array of Twilio numbers that are currently
     // being used by the customer as proxy_addresses
@@ -32,6 +32,8 @@ exports.handler = async function(context, event, callback) {
           return proxyAddresses;
         });
     
+    console.log(`${address} is currently bound to these proxy addresses: \n\n ${inUseAddresses.join("\n")}`)
+    
     // Query Twilio numbers and find one that is
     // not being used as a proxy_address
     const newProxyAddress = await client.incomingPhoneNumbers
@@ -47,6 +49,7 @@ exports.handler = async function(context, event, callback) {
         }
 
         if (!phoneNumber) {
+          console.log('No available phone numbers found, you can add one in the Twilio Console.')
           /*
             Your code to handle fetching new numbers here.
           */
@@ -55,16 +58,20 @@ exports.handler = async function(context, event, callback) {
         return phoneNumber;
       });
     
+    console.log(`Found an available number to use as a the proxy address: ${newProxyAddress}`)
+
     // Add the conversation participant with the new Proxy Address
-    const participantSid = await client.conversations.conversations(event.conversationSid)
+    const participant = await client.conversations.conversations(event.conversationSid)
       .participants
       .create({
         'messagingBinding.address': address,
         'messagingBinding.proxyAddress': newProxyAddress
       })
-      .then(participant => {
-        callback(null, participant);
-      });
+      .then(participant => { participant });
+
+    console.log(`Added ${address} to ${event.conversationSid} with ${newProxyAddress} as the proxy address.`)
+    
+    callback(null, participant)
 
   } catch (err) {
     callback(err);
