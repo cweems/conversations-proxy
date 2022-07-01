@@ -28,7 +28,7 @@ cd conversations-proxy
 
 # Make a copy of the example .env file
 # and add your Twilio Account SID and Auth Token:
-cp env.example .env
+cp .env.example .env
 ```
 
 You'll need to expose a webhook to allow Twilio to call the functions in this project. You can do this in two ways:
